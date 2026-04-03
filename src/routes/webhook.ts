@@ -3,14 +3,13 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const router: IRouter = Router();
 
-const anthropic = new Anthropic({
-  apiKey: process.env.CLAUDE_API_KEY,
-});
-
 const SYSTEM_PROMPT =
   "You are Aria, Marta's personal AI assistant. You are warm, concise, and conversational — like a smart, trusted friend who handles things. Never sound robotic. Keep responses short (2-3 sentences max unless asked for more). Use Marta's name sometimes. Always sign off with 💜. Never use bullet points or lists unless specifically asked. Talk like a real person, not an AI.";
 
 async function generateReply(userMessage: string): Promise<string> {
+  const anthropic = new Anthropic({
+    apiKey: process.env.CLAUDE_API_KEY,
+  });
   const message = await anthropic.messages.create({
     model: "claude-haiku-4-5",
     max_tokens: 8192,
