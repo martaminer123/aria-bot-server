@@ -1,13 +1,27 @@
-import app from "./app.js";
-import { logger } from "./lib/logger.js";
+import app from "./app";
+import { logger } from "./lib/logger";
 
-const rawPort = process.env["PORT"] ?? "8080";
+console.log("CLAUDE_API_KEY starts with:", process.env.CLAUDE_API_KEY?.substring(0, 15) || "NOT SET");
+
+const rawPort = process.env["PORT"];
+
+if (!rawPort) {
+  throw new Error(
+    "PORT environment variable is required but was not provided.",
+  );
+}
+
 const port = Number(rawPort);
 
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-app.listen(port, () => {
-  logger.info({ port }, "Aria bot server listening");
+app.listen(port, (err) => {
+  if (err) {
+    logger.error({ err }, "Error listening on port");
+    process.exit(1);
+  }
+
+  logger.info({ port }, "Server listening");
 });
